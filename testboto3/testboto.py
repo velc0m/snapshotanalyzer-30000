@@ -11,3 +11,4 @@ if __name__ == '__main__':
     print("Instance id: {}".format(inst_1.id))
     print("Instance placement: {}".format(inst_1.placement))
     print("State placement: {}".format(inst_1.state))
+    print("Tags: {}".format(inst_1.tags))
