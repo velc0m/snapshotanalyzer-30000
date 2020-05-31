@@ -17,6 +17,12 @@ def filter_instances(project):
     return instances
 
 
+# aws returns snapshots sorted by start time.
+def has_pending_snapshot(volume):
+    snapshots = list(volume.snapshots.all())
+    return snapshots and snapshots[0].state == 'pending'
+
+
 @click.group()
 def cli():
     """Shotty manages shapshots"""
@@ -70,6 +76,9 @@ def create_snapshot(project):
         i.wait_until_stopped()
 
         for v in i.volumes.all():
+            if has_pending_snapshot(v):
+                print("   Skipping {0}, snapshot is already in progress".format(v.id))
+                continue
             print("Creating snapshots for {0}".format(v.id))
             v.create_snapshot(Description="Created by SnapshotAnalyzer 30000")
 
